@@ -1,4 +1,5 @@
-const sequelize  = require("./dbmodel");
+const path = require("path");
+const sequelize = require(path.join(process.cwd(), 'src/config/lib/sequelize.js'))
 const UserType = require('./user-type.model')
 const { DataTypes }   = require("sequelize");
 
