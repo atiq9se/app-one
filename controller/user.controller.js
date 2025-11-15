@@ -1,9 +1,14 @@
 const User  = require('../models/user.model');
-
+const UserType = require('../models/user-type.model');
 
 const getUsers = async(req, res)=>{
     try{
-        const users = await User.findAll();
+        const users = await User.findAll({
+            include:[{
+                model:UserType,
+                as: 'atiq'
+            }]
+        });
 
         res.status(200).send(users);
     }
@@ -16,11 +21,8 @@ const getUsers = async(req, res)=>{
 const getUser = async(req, res)=>{
     try{
         const { id } = req.params;
-        const user = await User.findOne({
-            where: {
-                id
-            }
-        })
+
+        const user = await User.findOne({ where:{ id } })
         if(!user) return res.status(404).send('User not found');
 
         res.status(200).send(user);
@@ -35,13 +37,9 @@ const postUser =  async (req, res)=>{
     try{
         const { first_name, last_name, username, email, password, user_type_id } = req.body;
 
-        const existUser = await User.findOne({
-            where: {
-                email
-            } 
-         });
+        const existUser = await User.findOne({ where: {email} });
 
-         if(existUser) return res.status(400).send("Already registered with the email");
+        if(existUser) return res.status(400).send("Already registered with the email");
         
         const user = await User.create({
             first_name,
@@ -63,10 +61,14 @@ const postUser =  async (req, res)=>{
 const putUser = async(req, res)=>{
     try{
         const {id} = req.params;
+        const {first_name, last_name, username, email} = req.body;
 
-        const {username, email} = req.body;
+        const existUser = await User.findOne({ where:{ id } })
+        if(!existUser) return res.status(404).send("User not found")
 
         const user = await User.update({
+            first_name,
+            last_name,
             username, 
             email
         },{
@@ -74,7 +76,7 @@ const putUser = async(req, res)=>{
                 id
             }
         })
-        if(!user) return res.status(404).send('User is not found')
+        return res.status(200).send(user);
     }
     catch(err){
         console.log(err)
@@ -86,18 +88,16 @@ const putUser = async(req, res)=>{
 const patchUser = async(req, res)=>{
     try{
         const {id} = req.params;
-        const {username, email } = req.body;
+        const {first_name, last_name, email } = req.body;
 
-        const user = await User.update({
-                where:{
-                    id
-                }
-            
-        })
-        if(!user) return res.status(404).send("user not found")
+        const user = await User.findOne({ where:{ id } })
+        if(!user) return res.status(404).send("User not found")
         
-        if(!username) user.update({username});
-        if(!email) user.update({email});
+        if(first_name) user.update({first_name});
+        if(last_name) user.update({last_name});
+        if(email) user.update({email});
+
+        return res.status(200).send(user);
     }
     catch(err){
         console.log(err)
@@ -110,16 +110,12 @@ const deleteUser = async (req, res)=>{
      try{
         const {id} = req.params;
         
-        const user = await User.findOne({
-            where:{
-                id
-            }
-        })
-        if(!user) return res.status(404).send("user not found");
+        const user = await User.findOne({where:{id}})
+        if(!user) return res.status(404).send("User not found");
 
         await user.destroy();
-        return res.status(200).send(user);
 
+        return res.status(200).send(user);
      }
      catch(err){
         console.log(err);

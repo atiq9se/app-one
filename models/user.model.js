@@ -1,4 +1,5 @@
 const sequelize  = require("./dbmodel");
+const UserType = require('./user-type.model')
 const { DataTypes }   = require("sequelize");
 
 const User = sequelize.define("users", {
@@ -29,5 +30,8 @@ const User = sequelize.define("users", {
             values: [0, 1]
        }
 })
+
+UserType.hasMany(User, { as: 'users', foreignKey:'user_type_id'});
+User.belongsTo(UserType, { as: 'atiq', foreignKey: "user_type_id"});
 
 module.exports = User;

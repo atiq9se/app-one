@@ -6,7 +6,17 @@ function isEmailLengthValid(email){
     const local = parts[0];
     return local.length <= 64;
 }
-const registerSchema = object().shape({
+const userRegisterSchema = object().shape({
+    first_name: string()
+        .min(3, "Username must be 3 character")
+        .max(50, 'Username must be at most 50 character')
+        .required('This field is required'),
+
+    last_name: string()
+        .min(3, "Username must be 3 character")
+        .max(50, 'Username must be at most 50 character')
+        .required('This field is required'),
+
     username: string()
         .min(3, "Username must be 3 character")
         .max(50, 'Username must be at most 50 character')
@@ -24,20 +34,28 @@ const registerSchema = object().shape({
       .required('The field is required'),
 
     confirm_password: string()
-      .required('This field must be empty')
+      .required('This field must not be empty')
       .oneOf([ref('password'), null], 'password must match')
 })
 
 const userUpdateSchema = object().shape({
+    first_name: string()
+        .min(3, "Username must be 3 character")
+        .max(50, 'Username must be at most 50 character'),
+
+    last_name: string()
+        .min(3, "Username must be 3 character")
+        .max(50, 'Username must be at most 50 character'),
+
     username: string()
-    .min(3, 'Username must be at least 3 characters.')
-    .max(50, 'Username must be at least 3 characters.'),
+        .min(3, 'Username must be at least 3 characters.')
+        .max(50, 'Username must be at least 3 characters.'),
 
     email: string()
-    .email('This field should be a valid email address.')
-    .max(100, 'Email must be at most 100 characters long')
-    .test('is-valid-email-length', 'The part before@ of the emaill can be maximum 64 characters', email => isEmailLengthValid(email))
+        .email('This field should be a valid email address.')
+        .max(100, 'Email must be at most 100 characters long')
+        .test('is-valid-email-length', 'The part before@ of the emaill can be maximum 64 characters', email => isEmailLengthValid(email))
 })
 
-module.exports.registerSchema = registerSchema;
+module.exports.userRegisterSchema = userRegisterSchema;
 module.exports.userUpdateSchema = userUpdateSchema;

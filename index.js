@@ -5,7 +5,7 @@ const app = express();
 
 app.use(express.json());
 
-app.use('/', users);
+app.use(users);
 
 app.get('/', (req, res)=>{
   res.send('The server is running...');

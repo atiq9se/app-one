@@ -6,16 +6,16 @@ const Product = sequelize.define('products', {
             type: DataTypes.STRING,
             allowNull: false
       },
+      category: {
+            type: DataTypes.STRING,
+            allowNull: false
+      },
       price:{
             type: DataTypes.NUMBER,
             allowNull: false
       },
       description: {
             type: DataTypes.NUMBER,
-            allowNull: false
-      },
-      category: {
-            type: DataTypes.STRING,
             allowNull: false
       }
 })
