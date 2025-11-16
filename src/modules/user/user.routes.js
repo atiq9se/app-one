@@ -15,6 +15,9 @@ module.exports = app => {
         .put   (validate(userUpdateSchema), controller.putUser)
         .patch (validate(userUpdateSchema), controller.patchUser)
         .delete(controller.deleteUser); 
+
+    app.route("/api/users/login")
+       .post(controller.login)
 }
 
 

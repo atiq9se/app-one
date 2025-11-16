@@ -1,5 +1,37 @@
 const User  = require('./user.model');
 const UserType = require('./user-type.model');
+const jwt = require('jsonwebtoken');
+
+async function login(req, res){
+    try{
+        const { email, password } = req.body;
+
+        const user = await User.findOne({
+            where:{
+                email
+            }
+        })
+
+        if(!user)return res.status(400).send('Invalid email or password')
+        
+        if(user.password !== password) return res.status(400).send('Invalid email or password');
+
+        //Make a token and return it
+        const payload = { user_id:user.id, email:user.email }
+
+        const token = jwt.sign(payload, 'iamatiq', { expiresIn: '12h' });
+
+        user.dataValues.token = token;
+
+        return res.status(200).send(user);
+
+
+    }
+    catch(err){
+        console.log(err)
+        res.status(500).send('Internal server Error')
+    }
+}
 
 const getUsers = async(req, res)=>{
     try{
@@ -129,3 +161,4 @@ module.exports.postUser = postUser;
 module.exports.putUser = putUser;
 module.exports.patchUser = patchUser;
 module.exports.deleteUser = deleteUser;
+module.exports.login = login;
