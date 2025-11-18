@@ -14,7 +14,7 @@ async function login(req, res){
 
         if(!user)return res.status(400).send('Invalid email or password')
         
-        if(user.password !== password) return res.status(400).send('Invalid email or password');
+        // if(!user || !user.password  || !user.validPassword(password)) return res.status(400).send('Invalid email or password');
 
         //Make a token and return it
         const payload = { user_id:user.id, email:user.email }
