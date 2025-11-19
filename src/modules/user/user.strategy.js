@@ -1,5 +1,6 @@
 const passport = require("passport");
 const { Strategy } = require("passport-jwt");
+const User = require("./user.model");
 
 module.exports = function () {
     function cookieExtractor (req) {
@@ -7,4 +8,16 @@ module.exports = function () {
         if(req && req.signedCookies) token = req.signedCookies["access-token"];
         return token; 
     }
+
+    passwort.use("user-jwt", new Strategy({ secretOrKey: "iamatiq", jwtFromRequest: cookieExtractor }, function(payload, done){
+        User.findOne({
+            where: {
+                id: payload.id
+            }
+        })
+        .then(user => {
+            if(user) return done(null, user);
+            return done(null, false);
+        })
+    }));
 }
