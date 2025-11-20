@@ -4,11 +4,12 @@ const express = require('express');
 const router = express.Router();
 const validate = require('../core/middlewares/validate');
 const {userRegisterSchema, userUpdateSchema} = require('./user.schema');
-const auth = require("./user-authentication.middleware");
+// const auth = require("./user-authentication.middleware");
+const { AuthStrategy } = require("./user-authentication.middleware")
 
 module.exports = app => {
     app.route("/api/users")
-        .get (auth, controller.getUsers)
+        .get (AuthStrategy, controller.getUsers)
         .post(validate(userRegisterSchema), controller.postUser);
     
     app.route("/api/users/:id")

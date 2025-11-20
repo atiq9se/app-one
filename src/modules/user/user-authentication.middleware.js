@@ -1,29 +1,23 @@
 const jwt = require('jsonwebtoken');
 const passport = require("passport");
 
-const AuthStrategy = (req, res, next )=> (
-   passport.authenticate("user-jwt", async function(err, user, info){
-    if(err){
-        console.log(err);
-        return res.status.send("Internal server Error.");
-    }
-    if(!user) return; 
-    req.logIn(user, {session: false }, function (error){
-        if(error) return next(error);
-        next();
-    })
-    {
-        try{
-            const refreshTokenFromCookie = req.signedCookies["refresh_token"];
-            if(!refreshTokenFromCookie) throw new Error();
-            const payload = jwt.verify(refreshTokenFromCookie, "iamatiq")
+const AuthStrategy = (req, res, next) => (
+    passport.authenticate("user-jwt", async function(err, user, info) {
+        if(err){
+            console.log(err);
+            return res.status.send("Internal server Error.");
         }
-        catch(err){
 
-        }
-    }
-   })
+        if(!user) return; 
+
+        req.logIn(user, { session: false }, function(error) {
+            if(error) return next(error);
+            next();
+        });
+    })
 )(req, res, next);
+
+module.exports.AuthStrategy = AuthStrategy;
 
 
 
@@ -41,4 +35,4 @@ const verifyToken = (req, res, next) => {
     }
 }
 
-module.exports = verifyToken;
+// module.exports = verifyToken;
