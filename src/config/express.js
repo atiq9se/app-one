@@ -1,5 +1,6 @@
 const path = require("path");
 const users = require(path.join(process.cwd(), 'src/modules/user/user.routes.js'));
+const userStrategy = require(path.join(process.cwd(), 'src/modules/user/user.strategy.js'));
 const products = require(path.join(process.cwd(), 'src/modules/product/product.routes.js'));
 const express = require("express");
 
@@ -10,6 +11,7 @@ module.exports = async function(){
 
   users(app);
   products(app);
+  userStrategy();
   // app.use(users);
 
   app.get('/', (req, res)=>{ res.send('The server is running...') } );

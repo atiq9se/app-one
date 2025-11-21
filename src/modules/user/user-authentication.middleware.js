@@ -1,11 +1,11 @@
 const jwt = require('jsonwebtoken');
 const passport = require("passport");
 
-const AuthStrategy = (req, res, next) => (
-    passport.authenticate("user-jwt", async function(err, user, info) {
+const AuthStrategy = (req, res, next) => {
+    const auth = passport.authenticate("user-jwt", async function(err, user) {
         if(err){
-            console.log(err);
-            return res.status.send("Internal server Error.");
+           console.log(err);
+           return res.status.send("Internal server Error.");
         }
 
         if(!user) return; 
@@ -14,8 +14,9 @@ const AuthStrategy = (req, res, next) => (
             if(error) return next(error);
             next();
         });
-    })
-)(req, res, next);
+    });
+    auth(req, res, next)
+} 
 
 module.exports.AuthStrategy = AuthStrategy;
 

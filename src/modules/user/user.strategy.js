@@ -9,7 +9,7 @@ module.exports = function () {
         return token; 
     }
 
-    passwort.use("user-jwt", new Strategy({ secretOrKey: "iamatiq", jwtFromRequest: cookieExtractor }, function(payload, done){
+    passport.use("user-jwt", new Strategy({ secretOrKey: "token_secret", jwtFromRequest: cookieExtractor }, function(payload, done){
         User.findOne({
             where: {
                 id: payload.id
