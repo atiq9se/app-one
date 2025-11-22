@@ -8,7 +8,7 @@ const AuthStrategy = (req, res, next) => {
            return res.status.send("Internal server Error.");
         }
 
-        if(!user) return; 
+        if(!user) return res.status(401).send("Unauthenticated User."); 
 
         req.logIn(user, { session: false }, function(error) {
             if(error) return next(error);
