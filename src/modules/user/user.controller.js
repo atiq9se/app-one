@@ -1,6 +1,7 @@
 const User  = require('./user.model');
 const UserType = require('./user-type.model');
 const jwt = require('jsonwebtoken');
+const { generateAccessToken } = require("./services/user.service")
 
 async function login(req, res){
     try{
@@ -16,10 +17,12 @@ async function login(req, res){
         
         // if(!user || !user.password  || !user.validPassword(password)) return res.status(400).send('Invalid email or password');
 
-        const token = jwt.sign({ id: user.id }, process.env.TOKEN_SECRET, { expiresIn: '1h' });
-
         // user.dataValues.token = token;
-        res.cookie("access_token", token, { httpOnly: true, sameSide: true, signed: true });
+        res.cookie("access_token", generateAccessToken(user), { 
+            httpOnly: true, 
+            sameSide: true, 
+            signed: true 
+        });
 
         return res.status(200).send(user);
     }
