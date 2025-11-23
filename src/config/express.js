@@ -1,3 +1,4 @@
+require('dotenv').config();
 const path = require("path");
 const cookieParser = require("cookie-parser");
 const userRouter = require(path.join(process.cwd(), 'src/modules/user/user.routes.js'));
@@ -9,7 +10,7 @@ const express = require("express");
 module.exports = async function(){
   const app = express();
 
-  app.use(cookieParser("cookie_secret"));
+  app.use(cookieParser(process.env.COOKIE_SECRET));
   app.use(express.json());
 
   userRouter(app);
